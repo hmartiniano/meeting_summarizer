@@ -1,6 +1,44 @@
+import sys
+from unittest.mock import MagicMock
+
+# Mocking dependencies that are not available in the environment
+# to allow importing from meeting_summarizer.main
+mock_modules = [
+    "dotenv",
+    "langchain_core",
+    "langchain_core.runnables",
+    "langchain_core.output_parsers",
+    "langchain_core.prompts",
+    "langchain_core.exceptions",
+    "langchain_core.documents",
+    "langchain_core.caches",
+    "langchain_core.callbacks",
+    "langchain_text_splitters",
+    "langgraph",
+    "langgraph.graph",
+    "pydantic",
+    "tiktoken",
+    "langchain_ollama",
+    "langchain_ollama.chat_models",
+    "langchain_openai",
+    "langchain_google_genai",
+]
+
+for module_name in mock_modules:
+    if module_name not in sys.modules:
+        sys.modules[module_name] = MagicMock()
+
 import pytest
 from unittest.mock import patch, MagicMock
 from pathlib import Path
+
+# We need to make sure yaml is available or mock it too.
+try:
+    import yaml
+except ImportError:
+    sys.modules["yaml"] = MagicMock()
+    import yaml
+
 from meeting_summarizer.main import Config, DocumentValidator, TranscriptValidationError, TranscriptAnalyzerError, _deduplicate_list
 
 def test_config_defaults():
