@@ -1,0 +1,232 @@
+identify_topics:
+  initial_prompt: |
+    <role>You are an expert analyst.</role>
+
+    <instructions>
+    Read the text chunk provided in the <text> tags.
+    Identify the main topics.
+    </instructions>
+
+    <text>
+    {text}
+    </text>
+
+    <output_constraints>
+    {format_instructions}
+    </output_constraints>
+  refine_prompt: |
+    <role>You are a topic consolidation agent.</role>
+
+    <instructions>
+    Refine an existing list of topics by analyzing a new text chunk and merging new information.
+    1. Review the existing topics in the <existing_topics> tags.
+    2. Read the new text chunk in the <text> tags and identify new topics.
+    3. Compare each new topic to the existing list.
+       - If it is semantically identical or a slight variation of an existing topic, discard it.
+       - If it is a sub-topic of an existing topic, merge them into a more comprehensive topic.
+       - If it is a completely new and distinct topic, include it.
+    4. Ensure all topics in the final output are unique and consolidated.
+    </instructions>
+
+    <existing_topics>
+    {existing_answer}
+    </existing_topics>
+
+    <text>
+    {text}
+    </text>
+
+    <output_constraints>
+    {format_instructions}
+    </output_constraints>
+
+summarize_topics:
+  initial_prompt: |
+    <role>You are an Expert Analyst.</role>
+
+    <instructions>
+    Provide a concise summary of expert opinions on the target topic based only on the text chunk below.
+    </instructions>
+
+    <target_topic>
+    {topic}
+    </target_topic>
+
+    <text>
+    {text}
+    </text>
+
+    <output_constraints>
+    Return the summary as plain text.
+    </output_constraints>
+  refine_prompt: |
+    <role>You are an Expert Analyst.</role>
+
+    <instructions>
+    Refine the existing summary for the target topic using the new context provided below.
+    Focus ONLY on information relevant to the target topic.
+    </instructions>
+
+    <target_topic>
+    {topic}
+    </target_topic>
+
+    <existing_summary>
+    {existing_answer}
+    </existing_summary>
+
+    <text>
+    {text}
+    </text>
+
+    <output_constraints>
+    Return the refined summary as plain text.
+    </output_constraints>
+
+extract_key_insights:
+  initial_prompt: |
+    <role>You are an expert analyst.</role>
+
+    <instructions>
+    Extract overarching key insights from the text below.
+    Extract them as direct quotes attributed to the speaker, if possible.
+    </instructions>
+
+    <text>
+    {text}
+    </text>
+
+    <output_constraints>
+    {format_instructions}
+    </output_constraints>
+  refine_prompt: |
+    <role>You are an expert analyst.</role>
+
+    <instructions>
+    Review the existing list of key insights.
+    Add new, distinct insights from the text chunk below.
+    Ensure every insight in the final list is unique.
+    </instructions>
+
+    <existing_insights>
+    {existing_answer}
+    </existing_insights>
+
+    <text>
+    {text}
+    </text>
+
+    <output_constraints>
+    {format_instructions}
+    </output_constraints>
+
+extract_decisions:
+  initial_prompt: |
+    <role>You are an expert analyst.</role>
+
+    <instructions>
+    Extract explicit decisions discussed from the text below.
+    </instructions>
+
+    <text>
+    {text}
+    </text>
+
+    <output_constraints>
+    {format_instructions}
+    </output_constraints>
+  refine_prompt: |
+    <role>You are an expert analyst.</role>
+
+    <instructions>
+    Review the existing list of decisions.
+    Add new, distinct decisions from the text chunk below.
+    Ensure every decision in the final list is unique.
+    </instructions>
+
+    <existing_decisions>
+    {existing_answer}
+    </existing_decisions>
+
+    <text>
+    {text}
+    </text>
+
+    <output_constraints>
+    {format_instructions}
+    </output_constraints>
+
+generate_executive_summary:
+  initial_prompt: |
+    <role>You are an Expert Analyst.</role>
+
+    <instructions>
+    Create a concise executive summary of the following transcript.
+    Focus on the main topics, key insights, and decisions.
+    </instructions>
+
+    <transcript>
+    {text}
+    </transcript>
+
+    <output_constraints>
+    The summary must be 2-4 sentences long. Return only plain text.
+    </output_constraints>
+  refine_prompt: |
+    <role>You are an Expert Analyst.</role>
+
+    <instructions>
+    Refine the existing executive summary with the new topic summary below.
+    </instructions>
+
+    <existing_executive_summary>
+    {existing_answer}
+    </existing_executive_summary>
+
+    <new_topic_summary>
+    {text}
+    </new_topic_summary>
+
+    <output_constraints>
+    The final overview must be a single, cohesive paragraph of 2-4 sentences. Return only plain text.
+    </output_constraints>
+
+merge_topics:
+  initial_prompt: |
+    <role>You are a topic consolidation expert.</role>
+
+    <instructions>
+    Merge a list of potentially overlapping topics into a smaller, more coherent set of unique topics.
+    1. Analyze the topic list below.
+    2. Identify topics that are semantically similar, are subsets of each other, or discuss the same core concept.
+    3. Group similar topics and create a new, concise, representative topic title for each group.
+    </instructions>
+
+    <topic_list>
+    {topics}
+    </topic_list>
+
+    <output_constraints>
+    {format_instructions}
+    The keys should be the new merged topic titles, and the values should be the list of original topics grouped under that title.
+    </output_constraints>
+
+extract_topic_text:
+  initial_prompt: |
+    <role>You are an expert at extracting relevant information.</role>
+
+    <instructions>
+    From the text provided below, extract all sentences and paragraphs that are relevant to the target topic.
+    </instructions>
+
+    <target_topic>
+    {topic}
+    </target_topic>
+
+    <text>
+    {text}
+    </text>
+
+    <output_constraints>
+    Return only the extracted text, without any additional commentary.
+    </output_constraints>

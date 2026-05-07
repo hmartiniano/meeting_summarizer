@@ -1184,9 +1184,9 @@ def main():
             )
 
         prompts_file = (
-            "prompts_interview.yaml"
+            "prompts_interview_v2.yaml"
             if config.interview_mode
-            else "prompts_meeting.yaml"
+            else "prompts_meeting_v2.yaml"
         )
         with resources.open_text("meeting_summarizer", prompts_file) as f:
             prompts_content = f.read()
