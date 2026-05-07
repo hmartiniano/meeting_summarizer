@@ -1,0 +1,255 @@
+identify_topics:
+  initial_prompt: |
+    <role>You are an expert meeting analyst.</role>
+
+    <instructions>
+    Read the transcript chunk provided in the <transcript> tags.
+    Identify the main topics of discussion. The transcript may contain multiple speakers.
+    </instructions>
+
+    <transcript>
+    {text}
+    </transcript>
+
+    <output_constraints>
+    {format_instructions}
+    </output_constraints>
+  refine_prompt: |
+    <role>You are a topic consolidation agent.</role>
+
+    <instructions>
+    Refine an existing list of topics by analyzing a new meeting transcript chunk and merging new information.
+    1. Review the existing topics in the <existing_topics> tags.
+    2. Read the new transcript chunk in the <transcript> tags and identify new topics discussed by the participants.
+    3. Compare each new topic to the existing list.
+       - If it is semantically identical or a slight variation of an existing topic, discard it.
+       - If it is a sub-topic of an existing topic, merge them into a more comprehensive topic.
+       - If it is a completely new and distinct topic, include it.
+    4. Ensure all topics in the final output are unique and consolidated.
+    </instructions>
+
+    <existing_topics>
+    {existing_answer}
+    </existing_topics>
+
+    <transcript>
+    {text}
+    </transcript>
+
+    <output_constraints>
+    {format_instructions}
+    </output_constraints>
+
+summarize_topics:
+  initial_prompt: |
+    <role>You are a meeting analyst.</role>
+
+    <instructions>
+    Provide a concise summary of the discussion on the target topic based only on the transcript chunk below.
+    Synthesize the points from all relevant participants.
+    </instructions>
+
+    <target_topic>
+    {topic}
+    </target_topic>
+
+    <transcript>
+    {text}
+    </transcript>
+
+    <output_constraints>
+    Return the summary as plain text. Focus ONLY on information relevant to the target topic.
+    </output_constraints>
+  refine_prompt: |
+    <role>You are a meeting analyst.</role>
+
+    <instructions>
+    Refine the existing summary for the target topic using the new context from the transcript chunk below.
+    Integrate the perspectives of different participants.
+    Focus ONLY on information relevant to the target topic.
+    </instructions>
+
+    <target_topic>
+    {topic}
+    </target_topic>
+
+    <existing_summary>
+    {existing_answer}
+    </existing_summary>
+
+    <transcript>
+    {text}
+    </transcript>
+
+    <output_constraints>
+    Return the refined summary as plain text.
+    </output_constraints>
+
+extract_key_insights:
+  initial_prompt: |
+    <role>You are an expert analyst.</role>
+
+    <instructions>
+    Extract the most important, overarching key insights from the meeting transcript below.
+    Where possible, attribute the insight to the speaker (e.g., "[Speaker Name]: [Insight]").
+    </instructions>
+
+    <transcript>
+    {text}
+    </transcript>
+
+    <output_constraints>
+    {format_instructions}
+    </output_constraints>
+  refine_prompt: |
+    <role>You are an expert analyst.</role>
+
+    <instructions>
+    Review the existing list of key insights.
+    Add new, distinct insights from the transcript chunk below.
+    Ensure every insight in the final list is unique.
+    Attribute insights to speakers where possible.
+    </instructions>
+
+    <existing_insights>
+    {existing_answer}
+    </existing_insights>
+
+    <transcript>
+    {text}
+    </transcript>
+
+    <output_constraints>
+    {format_instructions}
+    </output_constraints>
+
+extract_decisions:
+  initial_prompt: |
+    <role>You are an expert analyst.</role>
+
+    <instructions>
+    Extract explicit decisions or agreements made during the meeting from the transcript below.
+    Identify clearly what was decided.
+    </instructions>
+
+    <transcript>
+    {text}
+    </transcript>
+
+    <output_constraints>
+    {format_instructions}
+    </output_constraints>
+  refine_prompt: |
+    <role>You are an expert analyst.</role>
+
+    <instructions>
+    Review the existing list of decisions.
+    Add new, distinct decisions from the transcript chunk below.
+    Ensure every decision in the final list is unique.
+    </instructions>
+
+    <existing_decisions>
+    {existing_answer}
+    </existing_decisions>
+
+    <transcript>
+    {text}
+    </transcript>
+
+    <output_constraints>
+    {format_instructions}
+    </output_constraints>
+
+extract_action_items:
+  initial_prompt: |
+    <role>You are an expert analyst.</role>
+
+    <instructions>
+    Extract clear, actionable tasks or action items from the text below.
+    For each action item, identify the task and who is assigned to it, if mentioned.
+    Format as: "[Person Name] to [task description]".
+    </instructions>
+
+    <transcript>
+    {text}
+    </transcript>
+
+    <output_constraints>
+    {format_instructions}
+    </output_constraints>
+  refine_prompt: |
+    <role>You are an expert analyst.</role>
+
+    <instructions>
+    Review the existing list of action items.
+    Add new, distinct action items from the transcript chunk below.
+    Ensure every action item in the final list is unique.
+    </instructions>
+
+    <existing_action_items>
+    {existing_answer}
+    </existing_action_items>
+
+    <transcript>
+    {text}
+    </transcript>
+
+    <output_constraints>
+    {format_instructions}
+    </output_constraints>
+
+generate_executive_summary:
+  initial_prompt: |
+    <role>You are a professional summarizer.</role>
+
+    <instructions>
+    Create a concise executive summary of the following meeting transcript.
+    Focus on the main topics discussed, key outcomes, and any major decisions or action items.
+    The meeting involved multiple participants.
+    </instructions>
+
+    <transcript>
+    {text}
+    </transcript>
+
+    <output_constraints>
+    The summary must be a brief, digestible paragraph of 2-4 sentences. Return only the plain text.
+    </output_constraints>
+  refine_prompt: |
+    <role>You are a professional summarizer.</role>
+
+    <instructions>
+    Refine the existing executive summary with the new topic summary below.
+    </instructions>
+
+    <existing_executive_summary>
+    {existing_answer}
+    </existing_executive_summary>
+
+    <new_topic_summary>
+    {text}
+    </new_topic_summary>
+
+    <output_constraints>
+    The final overview must be a single, cohesive paragraph of 2-4 sentences. Return only the plain text.
+    </output_constraints>
+
+merge_topics:
+  initial_prompt: |
+    <role>You are a topic consolidation expert.</role>
+
+    <instructions>
+    Merge a list of potentially overlapping topics from a multi-participant meeting into a smaller, more coherent set of unique topics.
+    1. Analyze the topic list.
+    2. Identify topics that are semantically similar, are subsets of each other, or discuss the same core concept from different participant perspectives.
+    3. Group similar topics and create a new, concise, representative topic title for each group that captures the essence of the discussion.
+    </instructions>
+
+    <topic_list>
+    {topics}
+    </topic_list>
+
+    <output_constraints>
+    {format_instructions}
+    The keys should be the new merged topic titles, and the values should be the list of original topics grouped under that title.
+    </output_constraints>
