@@ -30,6 +30,9 @@ dependencies = [
     "python-dotenv"
 ]
 
+[project.optional-dependencies]
+webapp = ["streamlit"]
+
 [tool.setuptools]
 package-dir = {"" = "src"}
 
